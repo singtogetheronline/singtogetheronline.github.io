@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" href="./favicon.ico" >
+    <title>Old Settlers Primary Program</title>
+    <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-storage.js"></script>
+    <script src="./components/main.js" type="module"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" crossorigin="anonymous">
+    <style>
+      html, body {
+        max-width: 100%;
+        overflow-x: hidden;
+     }  
+      .corner-logo {
+        margin-left: 20px;
+        margin-top: 10px;
+        margin-right: 10px;
+      }
+      .topbar {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 5px;
+      }
+      .mainBody {
+        width: 100%;
+      }
+      .mainCenter {
+        border: 1px solid black;
+        padding: 20px;
+        margin: auto;
+        max-width: 75rem;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+      }
+      video {
+        max-height: 300px;
+      }
+      .title {
+        margin-top: 20px;
+        text-align: center;
+      }
+      .signOutBtn {
+        margin-left: 10px;
+      }
+      .signInOut {
+        flex-shrink: 0;
+      }
+      @media (max-width : 400px) {
+        .title {display:none;}
+        .mainCenter {width: 100%;}
+      }
+    </style>
+  </head>
+  <body></body>
+</html>

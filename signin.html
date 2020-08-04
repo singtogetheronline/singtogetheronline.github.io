@@ -1,0 +1,32 @@
+<head>
+  <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-auth.js"></script>
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyAaacNmnk6xqxxBtlUb9wI7X9bW4RrN5E8",
+      authDomain: "oldsettlersprimary.firebaseapp.com",
+      databaseURL: "https://oldsettlersprimary.firebaseio.com",
+      projectId: "oldsettlersprimary",
+      storageBucket: "oldsettlersprimary.appspot.com",
+      messagingSenderId: "461212066970",
+      appId: "1:461212066970:web:b881225ccbe72e8ba82b23"
+    };
+    firebase.initializeApp(firebaseConfig);
+  </script>
+  <script src="https://www.gstatic.com/firebasejs/ui/4.5.1/firebase-ui-auth.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://www.gstatic.com/firebasejs/ui/4.5.1/firebase-ui-auth.css" />
+  <link rel="icon" href="https://cdn.glitch.com/048473fc-baa6-4f1c-bf9c-068370a5d280%2Ftv.png?v=1595296038054"
+    type="image/x-icon">
+  <script defer>
+    var uiConfig = {
+      signInSuccessUrl: window.location.pathname + '/../',
+      signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
+    };
+    var ui = new firebaseui.auth.AuthUI(firebase.auth());
+    ui.start("#firebaseui-auth-container", uiConfig);
+  </script>
+</head>
+
+<body>
+  <div id="firebaseui-auth-container"></div>
+</body>

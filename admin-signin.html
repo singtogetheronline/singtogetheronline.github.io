@@ -1,0 +1,35 @@
+<head>
+    <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.15.4/firebase-auth.js"></script>
+    <script>
+      var firebaseConfig = {
+        apiKey: "AIzaSyDb3Kl5qLiRrP1oe3Ij1PRDJOAdXMwDj4s",
+        authDomain: "simple-crud-test.firebaseapp.com",
+        databaseURL: "https://simple-crud-test.firebaseio.com",
+        projectId: "simple-crud-test",
+        storageBucket: "simple-crud-test.appspot.com",
+        messagingSenderId: "586226704676",
+        appId: "1:586226704676:web:3a9f8a3dbba29f8bb9d3b1"
+      };
+      firebase.initializeApp(firebaseConfig);
+    </script>
+    <script src="https://www.gstatic.com/firebasejs/ui/4.5.1/firebase-ui-auth.js"></script>
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://www.gstatic.com/firebasejs/ui/4.5.1/firebase-ui-auth.css"
+    />
+    <link rel="icon" href="https://cdn.glitch.com/048473fc-baa6-4f1c-bf9c-068370a5d280%2Ftv.png?v=1595296038054" type="image/x-icon">
+    <script defer>
+      var uiConfig = {
+        signInSuccessUrl: window.location.pathname + '/../admin.html',
+        signInOptions: [firebase.auth.EmailAuthProvider.PROVIDER_ID]
+      };
+      var ui = new firebaseui.auth.AuthUI(firebase.auth());
+      ui.start("#firebaseui-auth-container", uiConfig);
+    </script>
+  </head>
+  <body>
+    <div id="firebaseui-auth-container"></div>
+  </body>
+  
