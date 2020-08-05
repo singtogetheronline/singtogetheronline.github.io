@@ -12,8 +12,25 @@ export default function VideoRecorder(props) {
   const backingVideoRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const [backingUrl, setBackingUrl] = useState(null);
-
+  const [captionsUrl, setCaptionsUrl] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
+
+  useEffect(() => getStream(), []);
+  useEffect(() => {
+    if (props.song.video) getFiles();
+  }, []);
+
+  async function getFiles() {
+    const storageRef = firebase.storage().ref();
+    let videoUrl = await storageRef.child(`${props.song.video}/${props.song.id}.webm`).getDownloadURL()
+    setBackingUrl(videoUrl);
+    try {
+      let captionUrl = await storageRef.child(`captions/${props.song.id}.vtt`).getDownloadURL()
+      setCaptionsUrl(captionUrl);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   function start() {
     if (backingVideoRef.current) backingVideoRef.current.play();
@@ -26,35 +43,28 @@ export default function VideoRecorder(props) {
     mediaRecorderRef.current.stop();
     setIsRecording(false);
   }
+  
+  async function getStream() {
+    try {
+      let stream = await navigator.mediaDevices.getUserMedia({
+        video: true,
+        audio: true
+      });
+      videoRef.current.srcObject = stream;
+      let mediaRecorder = new MediaRecorder(stream, {
+        mimeType: "video/webm; codecs=vp9"
+      });
+      mediaRecorderRef.current = mediaRecorder;
+      mediaRecorder.ondataavailable = e => {
+        let blob = new Blob([event.data], { type: "video/webm" });
+        props.setBlob(blob);
+        props.setSongState(SongState.PLAYBACK);
+      };
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
-  useEffect(() => {
-    async function getStream() {
-      try {
-        let stream = await navigator.mediaDevices.getUserMedia({
-          video: true,
-          audio: true
-        });
-        videoRef.current.srcObject = stream;
-        let mediaRecorder = new MediaRecorder(stream, {
-          mimeType: "video/webm; codecs=vp9"
-        });
-        mediaRecorderRef.current = mediaRecorder;
-        mediaRecorder.ondataavailable = e => {
-          let blob = new Blob([event.data], { type: "video/webm" });
-          props.setBlob(blob);
-          props.setSongState(SongState.PLAYBACK);
-        };
-      } catch (e) {
-        console.log(e);
-      }
-    }
-    getStream();
-    if (props.song.video) {
-      const storageRef = firebase.storage().ref();
-      let u = storageRef.child(`${props.song.video}/${props.song.id}.webm`)
-        .getDownloadURL().then(u => setBackingUrl(u));
-    }
-  }, []);
   return html`
     <div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
       <button onclick=${e => start()} hidden="${isRecording}" >
@@ -83,7 +93,10 @@ export default function VideoRecorder(props) {
           ref=${backingVideoRef}
           playsinline="true"
           style="border: 5px black solid"
-        />`:null}
+          crossorigin="anonymous"
+        >
+          ${captionsUrl?html`<track kind="subtitles" src="${captionsUrl}" default/>`:null}
+        </video>`:null}
       
       </div>
       
