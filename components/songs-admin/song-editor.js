@@ -6,7 +6,38 @@ import {
 } from "https://unpkg.com/htm/preact/standalone.module.js";
 
 export default function SongEditor(props) {
-  const [videos, setVideos] = useState([])
+  const [videos, setVideos] = useState([]);
+  const [backingUrl, setBackingUrl] = useState(null);
+  const [captionsUrl, setCaptionsUrl] = useState(null);
+  const [captionText, setCaptionText] = useState(`WEBVTT
+
+00:01.000 --> 00:04.000
+Never drink liquid nitrogen.
+00:05.000 --> 00:09.000
+- It will perforate your stomach.
+- You could die.
+`);
+
+  async function getFiles() {
+    const storageRef = firebase.storage().ref();
+    let videoUrl = await storageRef.child(`${props.song.video}/${props.song.id}.webm`).getDownloadURL()
+    setBackingUrl(videoUrl);
+    try {
+      let captionUrl = await storageRef.child(`captions/${props.song.id}.vtt`).getDownloadURL()
+      setCaptionsUrl(captionUrl);
+      let response = await fetch(captionUrl);
+      setCaptionText(await response.text());
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  useEffect(() => {
+    if (props.song.video) {
+      getFiles();
+    }
+  }, [props.song.video]);
+
   useEffect(() => {
     const results = [];
     const db = firebase.firestore();
@@ -35,7 +66,13 @@ export default function SongEditor(props) {
     const db = firebase.firestore();
     db.collection('songs').doc(props.song.id).set(props.song).then(() => {
       props.setSong(null);
-    })
+    });
+    const storageRef = firebase.storage().ref();
+    const captionsRef = storageRef.child(`captions/${props.song.id}.vtt`);
+    var message = captionText;
+    captionsRef.putString(message).then(snapshot => {
+      console.log('captions uploaded');
+    });
   }
   return html`<label>Song Name</label><br/>
     <input value=${props.song.name} onchange=${e => props.setSong({...props.song, name:e.target.value})}/><br/>
@@ -61,6 +98,15 @@ export default function SongEditor(props) {
         ...${props.song.video==v.id?{checked:true}:{}}
       />
       <label>${v.submitter}</label><br/>`)}
+    <textarea onchange=${e => setCaptionText(e.target.value)} style="width: 350px; height: 300px;" >
+      ${captionText}
+    </textarea><br/>
     <button onclick=${e=> saveSong()}>Save</button>
-    <button onclick=${e=> props.setSong(null)}>Cancel</button>`
+    <button onclick=${e=> props.setSong(null)}>Cancel</button> <br/>
+    ${backingUrl?html`
+      <video width="350" src="${backingUrl}" controls crossorigin="anonymous">
+        ${captionsUrl?html`<track kind="subtitles" src="${captionsUrl}" default/>`:null}
+      </video>`:null}
+      
+    `
 }
