@@ -57,21 +57,34 @@ export default function VideoRecorder(props) {
   }, []);
   return html`
     <div style="display: flex; justify-content: center; flex-direction: column; align-items: center;">
-    <button onclick=${e => start()} hidden="${isRecording}">
-        Start Recording
+      <button onclick=${e => start()} hidden="${isRecording}" >
+        <i class="fa fa-circle" style="color:#f00"></i>Start Recording!
       </button>
-      <button onclick=${e => stop()} hidden="${!isRecording}">
-        Stop Recording
-      </button>
+      <div hidden="${!isRecording}" >
+        <span style="color:#f00; font-weight: bold">Now Recording</span>
+        <button onclick=${e => stop()} >
+          <i class="fa fa-square"></i>Stop Recording
+        </button>
+      </div>
+      
       <div style="display: flex; justify-content: center; flex-wrap: wrap;">
       <video
         ref=${videoRef}
         autoplay="true"
         muted="true"
+        playsinline="true"
         width="350"
         style="border: 5px ${isRecording ? "red" : "black"} solid"
       />
-      ${backingUrl?html`<video width="350" src="${backingUrl}" ref=${backingVideoRef} style="border: 5px black solid"/>`:null}
+      ${backingUrl?html`
+        <video
+          width="350"
+          src="${backingUrl}"
+          ref=${backingVideoRef}
+          muted="true"
+          playsinline="true"
+          style="border: 5px black solid"
+        />`:null}
       
       </div>
       
