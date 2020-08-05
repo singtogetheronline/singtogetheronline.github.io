@@ -81,7 +81,6 @@ export default function VideoRecorder(props) {
           width="350"
           src="${backingUrl}"
           ref=${backingVideoRef}
-          muted="true"
           playsinline="true"
           style="border: 5px black solid"
         />`:null}
