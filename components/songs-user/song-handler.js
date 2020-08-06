@@ -1,27 +1,37 @@
 import SongState from './song-state.js';
 import SongList from './song-list.js';
 import VideoRecorder from './video-recorder.js';
+import {MarkdownIt} from "https://cdn.jsdelivr.net/gh/JCloudYu/esm.markdown-it@8/esm.markdown-it.esm.js";
 
 import {
   html,
-  useState
+  useState,
+  useRef,
+  useEffect
 } from "https://unpkg.com/htm/preact/standalone.module.js";
 import VideoPlayback from './video-playback.js';
+
+const markdown = new MarkdownIt();
 
 export default function SongHandler(props) {
   const [song, setSong] = useState(null);
   const [songState, setSongState] = useState(SongState.SELECT);
   const [blob, setBlob] = useState(null);
+  const descriptionRef = useRef(null);
   
   if (songState === SongState.SELECT) {
     return html`<${SongList} user=${props.user} setSong=${setSong} setSongState=${setSongState}/>`
   }
+
+  useEffect(() => {
+    if (descriptionRef.current)
+      descriptionRef.current.innerHTML = markdown.render(song.description);
+  })
   
   if (songState === SongState.INSTRUCTIONS) {
     return html`
       <h2 style="text-align: center;">${song.name}</h2>
-      <div>
-        ${song.description}
+      <div ref=${descriptionRef} >
       </div>
       <button onclick=${e => setSongState(SongState.RECORD)}>Record Video</button>`;
   }
