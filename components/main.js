@@ -38,7 +38,7 @@ function Main() {
     </div>
     <div class="mainBody">
         ${user ? html`<${SongHandler} user=${user} />` : html`
-        <div class="mainCenter">Sign in to see what songs are assigned to you</div>`}
+        <div class="mainCenter"><a href="./signin.html">Create an account or sign in</a> to see what songs are assigned to you</div>`}
     </div>
   `;
 }

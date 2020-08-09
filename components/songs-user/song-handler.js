@@ -39,7 +39,7 @@ function NavBar(props) {
   return html`
     <ul class="nav nav-pills nav-fill">
       <${NavItem}
-        displayName="Assignments"
+        displayName="Songs"
         state=${SongState.SELECT}
         songState=${props.songState}
         setSongState=${props.setSongState}
