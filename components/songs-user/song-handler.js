@@ -15,7 +15,6 @@ import VideoPlayback from './video-playback.js';
 
 const markdown = new MarkdownIt();
 
-
 function NavItem(props) {
   let disabled = '';
   if (stateOrder[props.songState] <= stateOrder[props.state]) {
@@ -72,6 +71,11 @@ export default function SongHandler(props) {
   const [blob, setBlob] = useState(null);
   const descriptionRef = useRef(null);
 
+  useEffect(() => {
+    if (descriptionRef.current)
+      descriptionRef.current.innerHTML = markdown.render(song.description);
+  })
+
   function selectSubComponent() {
     if (songState === SongState.SELECT) {
       return html`
@@ -125,10 +129,7 @@ export default function SongHandler(props) {
     
   
 
-  useEffect(() => {
-    if (descriptionRef.current)
-      descriptionRef.current.innerHTML = markdown.render(song.description);
-  })
+  
   
   
   
