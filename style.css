@@ -1,0 +1,58 @@
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+    justify-content: center;
+}  
+.corner-logo {
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 5px;
+}
+.mainBody {
+    width: 100%;
+}
+.nav {
+    margin-top: 5px;
+    margin: auto;
+    max-width: 50rem;
+    margin-bottom: 5px;
+}
+.mainCenter {
+    border: 1px solid black;
+    padding: 20px;
+    margin: auto;
+    max-width: 50rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+video {
+    max-height: 300px;
+}
+.title {
+    margin-top: 20px;
+    text-align: center;
+}
+.signOutBtn {
+    margin-left: 10px;
+}
+.signInOut {
+    flex-shrink: 0;
+}
+@media (max-width : 400px) {
+    .title {
+        display:none;
+    }
+    .mainCenter {
+        width: 100%;
+    }
+}
+label {
+    font-weight: bold;
+}

@@ -74,10 +74,12 @@ Never drink liquid nitrogen.
       console.log('captions uploaded');
     });
   }
-  return html`<label>Song Name</label><br/>
+  return html`
+  <div style="width: 100%;">
+  <label>Song Name</label><br/>
     <input value=${props.song.name} onchange=${e => props.setSong({...props.song, name:e.target.value})}/><br/>
     <label>Song Instructions</label><br/>
-    <textarea onchange=${e => props.setSong({...props.song, description:e.target.value})}>
+    <textarea style="height: 150px; width: 100%" onchange=${e => props.setSong({...props.song, description:e.target.value})}>
       ${props.song.description}
     </textarea><br/>
     <label> Assigned Email Addresses </label>
@@ -98,7 +100,8 @@ Never drink liquid nitrogen.
         ...${props.song.video==v.id?{checked:true}:{}}
       />
       <label>${v.submitter}</label><br/>`)}
-    <textarea onchange=${e => setCaptionText(e.target.value)} style="width: 350px; height: 300px;" >
+    <label>Subtitles</label><br/>
+    <textarea onchange=${e => setCaptionText(e.target.value)} style="width: 100%; height: 200px;" >
       ${captionText}
     </textarea><br/>
     <button onclick=${e=> saveSong()}>Save</button>
@@ -107,6 +110,6 @@ Never drink liquid nitrogen.
       <video width="350" src="${backingUrl}" controls crossorigin="anonymous">
         ${captionsUrl?html`<track kind="subtitles" src="${captionsUrl}" default/>`:null}
       </video>`:null}
-      
+      </div>
     `
 }
