@@ -10,7 +10,7 @@ import {
 
 function Main() {
   const [user, setUser] = useState(null);
-
+  
   useEffect(() => {
     firebase.auth().onAuthStateChanged(user => setUser(user));
   }, []);
@@ -37,27 +37,8 @@ function Main() {
       </div>
     </div>
     <div class="mainBody">
-    ${ user ? html`
-      <ul class="nav nav-pills nav-fill">
-        <li class="nav-item">
-          <a class="nav-link disabled active" href="#">Assigned Songs</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Instructions</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Record</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Upload</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" href="#">Complete</a>
-        </li>
-      </ul>`: null }
-      <div class="mainCenter">
-        ${user ? html`<${SongHandler} user=${user} />` : 'Sign in to see what songs are assigned to you'}
-      </div>
+        ${user ? html`<${SongHandler} user=${user} />` : html`
+        <div class="mainCenter">Sign in to see what songs are assigned to you</div>`}
     </div>
   `;
 }
