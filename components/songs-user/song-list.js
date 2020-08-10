@@ -1,5 +1,5 @@
-import firebase from "../../firebase.js";
 import SongState from './song-state.js';
+import {getMySongs} from '../../services/storage.js';
 import {
   html,
   useEffect,
@@ -9,17 +9,7 @@ import {
 export default function SongList(props) {
   const [songs, setSongs] = useState([]);
   useEffect(() => {
-    const results = [];
-    const db = firebase.firestore();
-    db.collection("songs")
-      .where('allowedEmails', 'array-contains', props.user.email)
-      .get()
-      .then(snapshot => {
-        snapshot.forEach(doc => {
-          results.push({...doc.data(), id:doc.id});
-        });
-        setSongs(results);
-      });
+    getMySongs(props.user).then(results => setSongs(results));
   }, [])
 
   function setSong(song) {

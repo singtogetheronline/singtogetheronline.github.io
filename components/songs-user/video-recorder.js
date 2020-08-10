@@ -1,5 +1,5 @@
 import SongState from './song-state.js';
-
+import {getVideoUrls} from '../../services/storage.js'
 import {
   html,
   useEffect,
@@ -21,15 +21,9 @@ export default function VideoRecorder(props) {
   }, []);
 
   async function getFiles() {
-    const storageRef = firebase.storage().ref();
-    let videoUrl = await storageRef.child(`${props.song.video}/${props.song.id}.webm`).getDownloadURL()
-    setBackingUrl(videoUrl);
-    try {
-      let captionUrl = await storageRef.child(`captions/${props.song.id}.vtt`).getDownloadURL()
-      setCaptionsUrl(captionUrl);
-    } catch (e) {
-      console.log(e);
-    }
+    const urls = await getVideoUrls(props.song);
+    setBackingUrl(urls.video);
+    setCaptionsUrl(urls.caption);
   }
 
   function start() {

@@ -1,4 +1,5 @@
-import firebase from "../../firebase.js";
+import {getAllSongs, createSong} from '../../services/storage.js';
+
 import {
   html,
   useEffect,
@@ -11,16 +12,7 @@ export default function SongListEditor(props) {
   const [song, setSong] = useState(null);
   useEffect(() => {
     if (song == null) {
-      const results = [];
-      const db = firebase.firestore();
-      db.collection("songs")
-        .get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            results.push({...doc.data(), id:doc.id});
-          });
-          setSongs(results);
-        });
+      getAllSongs().then(results => setSongs(results));
     }
   }, [song])
 
@@ -30,10 +22,7 @@ export default function SongListEditor(props) {
       description: 'Instructions for singing',
       allowedEmails: []
     };
-    const db = firebase.firestore();
-    db.collection("songs").add(s).then(d => {
-        setSong({...s, id:d.id});
-    });
+    createSong(s).then(d => setSong({...s, id:d.id}));
   }
   if (song) {
     return html`<${SongEditor} user=${props.user} song=${song} setSong=${setSong}/>`;

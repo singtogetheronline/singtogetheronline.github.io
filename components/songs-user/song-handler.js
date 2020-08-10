@@ -1,69 +1,18 @@
 import SongState from './song-state.js';
-import {stateOrder} from './song-state.js';
-
 import SongList from './song-list.js';
 import VideoRecorder from './video-recorder.js';
-import {MarkdownIt} from "https://cdn.jsdelivr.net/gh/JCloudYu/esm.markdown-it@8/esm.markdown-it.esm.js";
+import VideoPlayback from './video-playback.js';
+import NavBar from './navbar.js';
 
+import { MarkdownIt } from "https://cdn.jsdelivr.net/gh/JCloudYu/esm.markdown-it@8/esm.markdown-it.esm.js";
 import {
   html,
   useState,
   useRef,
   useEffect
 } from "https://unpkg.com/htm/preact/standalone.module.js";
-import VideoPlayback from './video-playback.js';
 
 const markdown = new MarkdownIt();
-
-function NavItem(props) {
-  let disabled = '';
-  if (stateOrder[props.songState] <= stateOrder[props.state]) {
-    disabled = 'disabled';
-  }
-  let active = '';
-  if (props.songState == props.state) active = 'active';
-  return html`
-    <li class="nav-item">
-      <a
-        class="nav-link ${disabled} ${active}"
-        href="#"
-        onclick=${e => props.setSongState(props.state)}
-      >
-        ${props.displayName}
-      </a>
-    </li>`;
-}
-
-function NavBar(props) {
-  
-  return html`
-    <ul class="nav nav-pills nav-fill">
-      <${NavItem}
-        displayName="Songs"
-        state=${SongState.SELECT}
-        songState=${props.songState}
-        setSongState=${props.setSongState}
-      />
-      <${NavItem}
-        displayName="Instructions"
-        state=${SongState.INSTRUCTIONS}
-        songState=${props.songState}
-        setSongState=${props.setSongState}
-      />
-      <${NavItem}
-        displayName="Record"
-        state=${SongState.RECORD}
-        songState=${props.songState}
-        setSongState=${props.setSongState}
-      />
-      <${NavItem}
-        displayName="Upload"
-        state=${SongState.PLAYBACK}
-        songState=${props.songState}
-        setSongState=${props.setSongState}
-      />  
-    </ul>`
-}
 
 export default function SongHandler(props) {
   const [song, setSong] = useState(null);
@@ -126,12 +75,5 @@ export default function SongHandler(props) {
     <div class="mainCenter">
       ${selectSubComponent()}
     </div>`;
-    
-  
-
-  
-  
-  
-  
 }
 

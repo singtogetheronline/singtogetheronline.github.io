@@ -1,5 +1,5 @@
-import firebase from "../../firebase.js";
 import SongState from "./song-state.js";
+import { uploadVideo } from '../../services/storage.js'
 
 import byteSize from "https://unpkg.com/byte-size@7.0.0/index.mjs";
 import {
@@ -11,21 +11,11 @@ import {
 export default function VideoPlayback(props) {
   const [performers, setPerformers] = useState('');
   const [url, setUrl] = useState('');
-  
   function upload() {
     props.setSongState(SongState.UPLOADING);
-    const storageRef = firebase.storage().ref();
-    const db = firebase.firestore();
-      db.collection("videos")
-        .doc(`${props.song.id}/user/${props.user.uid}`)
-        .set({
-          submitter:props.user.displayName,
-          performers: performers
-        });
-    const fileRef = storageRef.child(`${props.user.uid}/${props.song.id}.webm`);
-    fileRef.put(props.blob).then(snapshot => {
+    uploadVideo(props.song, props.user, performers, props.blob).then(() => {
       props.setSongState(SongState.UPLOADED);
-    });
+    }); 
   }
 
   useEffect(() => {

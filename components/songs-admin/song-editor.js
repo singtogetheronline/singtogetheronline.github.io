@@ -1,4 +1,4 @@
-import firebase from "../../firebase.js";
+import {saveSong, getVideos, getVideoUrls} from '../../services/storage.js';
 import {
   html,
   useEffect,
@@ -19,37 +19,21 @@ Never drink liquid nitrogen.
 `);
 
   async function getFiles() {
-    const storageRef = firebase.storage().ref();
-    let videoUrl = await storageRef.child(`${props.song.video}/${props.song.id}.webm`).getDownloadURL()
-    setBackingUrl(videoUrl);
-    try {
-      let captionUrl = await storageRef.child(`captions/${props.song.id}.vtt`).getDownloadURL()
-      setCaptionsUrl(captionUrl);
-      let response = await fetch(captionUrl);
+    const urls = await getVideoUrls(props.song);
+    setBackingUrl(urls.video);
+    setCaptionsUrl(urls.caption);
+    if (urls.caption) {
+      let response = await fetch(urls.caption);
       setCaptionText(await response.text());
-    } catch (e) {
-      console.log(e);
     }
   }
 
   useEffect(() => {
-    if (props.song.video) {
-      getFiles();
-    }
+    if (props.song.video) getFiles()
   }, [props.song.video]);
 
-  useEffect(() => {
-    const results = [];
-    const db = firebase.firestore();
-    db.collection(`videos/${props.song.id}/user`)
-      .get()
-      .then(snapshot => {
-        snapshot.forEach(doc => {
-          results.push({ ...doc.data(), id: doc.id });
-        });
-        setVideos(results);
-      });
-  }, [props.song.id])
+  useEffect(() => getVideos(props.song).then((videos) => setVideos(videos)), [props.song.id]);
+
   function onEmailChange(newValue, i) {
     let list = [...props.song.allowedEmails];
     list[i] = newValue;
@@ -62,18 +46,13 @@ Never drink liquid nitrogen.
   function onAddEmail() {
     props.setSong({...props.song, allowedEmails:[...props.song.allowedEmails, '']});
   }
-  function saveSong() {
-    const db = firebase.firestore();
-    db.collection('songs').doc(props.song.id).set(props.song).then(() => {
+  
+  function saveSongInfo() {
+    saveSong(props.song, captionText).then(()=> {
       props.setSong(null);
     });
-    const storageRef = firebase.storage().ref();
-    const captionsRef = storageRef.child(`captions/${props.song.id}.vtt`);
-    var message = captionText;
-    captionsRef.putString(message).then(snapshot => {
-      console.log('captions uploaded');
-    });
   }
+
   return html`
   <div style="width: 100%;">
   <label>Song Name</label><br/>
@@ -104,7 +83,7 @@ Never drink liquid nitrogen.
     <textarea onchange=${e => setCaptionText(e.target.value)} style="width: 100%; height: 200px;" >
       ${captionText}
     </textarea><br/>
-    <button onclick=${e=> saveSong()}>Save</button>
+    <button onclick=${e=> saveSongInfo()}>Save</button>
     <button onclick=${e=> props.setSong(null)}>Cancel</button> <br/>
     ${backingUrl?html`
       <video width="350" src="${backingUrl}" controls crossorigin="anonymous">
