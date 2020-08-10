@@ -13,7 +13,7 @@ export async function getVideos(song) {
 export async function getVideoUrls(song) {
   const ret = {};
   const storageRef = firebase.storage().ref();
-  ret.video = await storageRef.child(`${song.video}/${song.id}.webm`).getDownloadURL();
+  ret.video = await storageRef.child(`${song.video.id}/${song.id}.${song.video.filetype}`).getDownloadURL();
   try {
     ret.caption = await storageRef.child(`captions/${song.id}.vtt`).getDownloadURL();
   } catch (e) {
@@ -32,17 +32,18 @@ export function saveSong(song, captionText) {
   return db.collection('songs').doc(song.id).set(song)
 }
 
-export function uploadVideo(song, user, performers, blob) {
+export function uploadVideo(song, user, performers, blobOrFile, filetype) {
   const storageRef = firebase.storage().ref();
     const db = firebase.firestore();
       db.collection("videos")
         .doc(`${song.id}/user/${user.uid}`)
         .set({
           submitter:user.displayName,
-          performers: performers
+          performers: performers,
+          filetype: filetype
         });
-    const fileRef = storageRef.child(`${user.uid}/${song.id}.webm`);
-    return fileRef.put(blob);
+    const fileRef = storageRef.child(`${user.uid}/${song.id}.${filetype}`);
+    return fileRef.put(blobOrFile);
 }
 
 export async function getMySongs(user) {

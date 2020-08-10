@@ -18,6 +18,7 @@ export default function SongHandler(props) {
   const [song, setSong] = useState(null);
   const [songState, setSongState] = useState(SongState.SELECT);
   const [blob, setBlob] = useState(null);
+  const [filetype, setFileType] = useState('');
   const descriptionRef = useRef(null);
 
   useEffect(() => {
@@ -47,6 +48,7 @@ export default function SongHandler(props) {
           song=${song}
           setBlob=${setBlob}
           setSongState=${setSongState}
+          setFileType=${setFileType}
         />
         `;
     }
@@ -57,6 +59,7 @@ export default function SongHandler(props) {
           setSongState=${setSongState}
           user=${props.user}
           song=${song}
+          filetype=${filetype}
         />`; 
     }
     if (songState ===SongState.UPLOADING) {

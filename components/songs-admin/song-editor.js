@@ -74,9 +74,9 @@ Never drink liquid nitrogen.
         type="radio"
         name="videoSelect"
         onchange=${e=> {
-          if (e.target.checked) props.setSong({...props.song, video:v.id})
+          if (e.target.checked) props.setSong({...props.song, video:v})
         }}
-        ...${props.song.video==v.id?{checked:true}:{}}
+        ...${props.song.video?.id == v.id? { checked: true }:{}}
       />
       <label>${v.submitter}</label><br/>`)}
     <label>Subtitles</label><br/>

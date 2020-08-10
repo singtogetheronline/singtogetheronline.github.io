@@ -13,7 +13,7 @@ export default function VideoPlayback(props) {
   const [url, setUrl] = useState('');
   function upload() {
     props.setSongState(SongState.UPLOADING);
-    uploadVideo(props.song, props.user, performers, props.blob).then(() => {
+    uploadVideo(props.song, props.user, performers, props.blob, props.filetype).then(() => {
       props.setSongState(SongState.UPLOADED);
     }); 
   }
