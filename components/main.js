@@ -12,6 +12,7 @@ function Main() {
   const [user, setUser] = useState(null);
   
   useEffect(() => {
+    console.log(window.Modernizr)
     firebase.auth().onAuthStateChanged(user => setUser(user));
   }, []);
 
