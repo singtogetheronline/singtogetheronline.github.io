@@ -12,10 +12,9 @@ export default function SongEditor(props) {
   const [captionText, setCaptionText] = useState(`WEBVTT
 
 00:01.000 --> 00:04.000
-Never drink liquid nitrogen.
+These are example song lyrics
 00:05.000 --> 00:09.000
-- It will perforate your stomach.
-- You could die.
+It will be updated when you save.
 `);
 
   async function getFiles() {
@@ -27,7 +26,7 @@ Never drink liquid nitrogen.
       setCaptionText(await response.text());
     }
   }
-
+  
   useEffect(() => {
     if (props.song.video) getFiles()
   }, [props.song.video]);

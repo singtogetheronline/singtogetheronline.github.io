@@ -30,8 +30,8 @@ function Main() {
   }
   return html`
     <div class="topbar">
-      <i class="fas fa-place-of-worship fa-2x corner-logo"></i>
-      <h2 class="title"> Old Settlers Virtual Primary Program </h2>
+      <a href="/"><i class="fas fa-place-of-worship fa-2x corner-logo"></i></a>
+      <h2 class="title"> Virtual Primary Program </h2>
       <div class="signInOut">
           ${signInOut}
       </div>
