@@ -7,7 +7,26 @@ export async function getVideos(song) {
   snapshot.forEach(doc => {
     results.push({ ...doc.data(), id: doc.id });
   });
+  
   return results;
+}
+
+export async function getUserPerformers(user) {
+  const results = []
+  const db = firebase.firestore();
+  let snapshot = await db.collection('performers')
+    .where('email', '==', user.email)
+    .get();
+  snapshot.forEach(doc => {
+    results.push({...doc.data(), id:doc.id});
+  });
+  snapshot = await db.collection('performers')
+    .where('otherEmail', '==', user.email)
+    .get();
+  snapshot.forEach(doc => {
+    results.push({...doc.data(), id:doc.id});
+  });
+  return [...new Set(results)];
 }
 
 export async function getAllPerformers(org) {

@@ -15,7 +15,7 @@ export default function VideoRecorder(props) {
   const [backingUrl, setBackingUrl] = useState(null);
   const [captionsUrl, setCaptionsUrl] = useState(null);
   const [isRecording, setIsRecording] = useState(false);
-  const [inputMethod, setInputMethod] = useState('upload');
+  const [inputMethod, setInputMethod] = useState('record');
 
   useEffect(() => {
     if (inputMethod == 'record') {
@@ -139,7 +139,7 @@ export default function VideoRecorder(props) {
 
   return html`
   <div class="form-group" style="width: 100%" >
-    <label>Choose a way to submit video</label>
+    <label>Would you like to record in the web browser or upload a file?</label>
     <select class="form-control" onchange=${e => setInputMethod(e.target.value)} value=${inputMethod} >
       <option value="record">Record in web browser</option>
       <option value="upload">Upload video file</option>
