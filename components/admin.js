@@ -9,9 +9,15 @@ import SongListEditor from './songs-admin/song-list-editor.js';
 
 function Admin() {
   const [user, setUser] = useState(null);
+  const [org, setOrg] = useState(null);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => setUser(user));
+    firebase.auth().onAuthStateChanged(user => {
+      setUser(user);
+      if (user) {
+        user.getIdTokenResult().then(idTokenResult => setOrg(idTokenResult.claims.org));
+      }
+    });
   }, []);
 
   let signInOut;
@@ -37,10 +43,9 @@ function Admin() {
   </div>
   <div class="mainBody">
     <div class="mainCenter">
-      ${user ? html`<${SongListEditor} user=${user} />` : 'Sign in to see what songs are assigned to you'}
+      ${user ? html`<${SongListEditor} user=${user} org=${org} />` : 'Sign in to see what songs are assigned to you'}
     </div>
   </div>`;
-
 }
 render(
   html`<${Admin} />`,

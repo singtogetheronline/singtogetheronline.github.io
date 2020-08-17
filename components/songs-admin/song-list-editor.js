@@ -15,13 +15,13 @@ export default function SongListEditor(props) {
   
   useEffect(() => {
     if (song == null) {
-      getAllSongs().then(results => setSongs(results));
+      getAllSongs(props.org).then(results => setSongs(results));
     }
-  }, [song]);
+  }, [song, props.org]);
 
   function removeSong(song) {
     deleteSong(song).then(() => {
-      getAllSongs().then(results => setSongs(results));
+      getAllSongs(props.org).then(results => setSongs(results));
     })
   }
 
@@ -29,7 +29,8 @@ export default function SongListEditor(props) {
     let s = {
       name: 'Untitled',
       description: 'Instructions for singing',
-      allowedEmails: []
+      allowedEmails: [],
+      org: props.org
     };
     createSong(s).then(d => setSong({...s, id:d.id}));
   }
@@ -46,6 +47,6 @@ export default function SongListEditor(props) {
         </li>`)}
       <li><a href="#" onclick=${e => newSong()}>New Song</a></li>
     </ul>
-    <${Performers} performers=${performers} setPerformers=${setPerformers}/>
+    <${Performers} performers=${performers} setPerformers=${setPerformers} org=${props.org} />
     `;
-} 
+}

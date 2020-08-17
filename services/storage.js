@@ -3,17 +3,19 @@ import firebase from "../firebase.js";
 export async function getVideos(song) {
   const results = [];
   const db = firebase.firestore();
-  let snapshot = await db.collection(`videos/${song.id}/user`).get();
+  let snapshot = await db.collection(`videos/${song.id}/performers`).get();
   snapshot.forEach(doc => {
     results.push({ ...doc.data(), id: doc.id });
   });
   return results;
 }
 
-export async function getAllPerformers() {
+export async function getAllPerformers(org) {
   const results = []
   const db = firebase.firestore();
-  let snapshot = await db.collection('performers').get();
+  let snapshot = await db.collection('performers')
+    .where('org', '==', org)
+    .get();
   snapshot.forEach(doc => {
     results.push({...doc.data(), id:doc.id});
   });
@@ -63,17 +65,19 @@ export function saveSong(song, captionText) {
 }
 
 export function uploadVideo(song, user, performers, blobOrFile, filetype) {
+  const performerId = performers.map(p => p.id).join('_');
   const storageRef = firebase.storage().ref();
-    const db = firebase.firestore();
-      db.collection("videos")
-        .doc(`${song.id}/user/${user.uid}`)
-        .set({
-          submitter:user.displayName,
-          performers: performers,
-          filetype: filetype
-        });
-    const fileRef = storageRef.child(`${user.uid}/${song.id}.${filetype}`);
-    return fileRef.put(blobOrFile);
+  const db = firebase.firestore();
+  db.collection("videos")
+    .doc(`${song.id}/performers/${performerId}`)
+    .set({
+      id: performerId,
+      submitter:user.displayName,
+      performers: performers,
+      filetype: filetype
+    });
+  const fileRef = storageRef.child(`${song.id}/${performerId}.${filetype}`);
+  return fileRef.put(blobOrFile);
 }
 
 export async function getMySongs(user) {
@@ -88,10 +92,11 @@ export async function getMySongs(user) {
   return results;
 }
 
-export async function getAllSongs() {
+export async function getAllSongs(org) {
   const results = [];
   const db = firebase.firestore();
   const snapshot = await db.collection("songs")
+    .where('org', '==', org)
     .get();
   snapshot.forEach(doc => {
     results.push({...doc.data(), id:doc.id});

@@ -12,13 +12,13 @@ export default function Performers(props) {
   useEffect(() => {
     // this means they just arrived or they just finished editing a performer
     if (editingPerformer==null) { 
-      getAllPerformers().then(results => props.setPerformers(results));
+      getAllPerformers(props.org).then(results => props.setPerformers(results));
     }
-  }, [editingPerformer]);
+  }, [editingPerformer, props.org]);
 
   function newPerformer() {
     $('#newPerformerModal').modal('show');
-    const startData = {name:'Performer Name', email:'', otherEmail:''}
+    const startData = {name:'Performer Name', email:'', otherEmail:'', org: props.org}
     createPerformer(startData).then(doc => {
       setEditingPerformer({...startData, id:doc.id});
     })

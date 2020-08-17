@@ -10,10 +10,16 @@ import {
 
 function Main() {
   const [user, setUser] = useState(null);
+  const [org, setOrg] = useState(null);
   
   useEffect(() => {
     console.log(window.Modernizr)
-    firebase.auth().onAuthStateChanged(user => setUser(user));
+    firebase.auth().onAuthStateChanged(user => {
+      setUser(user);
+      if (user) {
+        user.getIdTokenResult().then(idTokenResult => setOrg(idTokenResult.claims.org));
+      }
+    });
   }, []);
 
   let signInOut;
@@ -34,7 +40,8 @@ function Main() {
       <a href="/"><i class="fas fa-place-of-worship fa-2x corner-logo"></i></a>
       <h2 class="title"> Virtual Primary Program </h2>
       <div class="signInOut">
-          ${signInOut}
+        ${org && html`<a class="admin-link" href="/admin.html">Admin Panel</a>`}
+        ${signInOut}
       </div>
     </div>
     <div class="mainBody">
