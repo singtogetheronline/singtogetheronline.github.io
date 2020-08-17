@@ -98,7 +98,7 @@ export default function SongEditor(props) {
 					</select>
 				</div>
     <label>Backing Video</label><br/>
-    ${[...videos, {id:null, submitter:'None'}].map(v => html`
+    ${[...videos, {id:null, performers:[{name:'None'}]}].map(v => html`
       <input
         type="radio"
         name="videoSelect"
@@ -107,7 +107,7 @@ export default function SongEditor(props) {
         }}
         ...${props.song.video?.id == v.id? { checked: true }:{}}
       />
-      <label>${v.submitter}</label><br/>`)}
+      <label>${v.performers?.map(p => p.name)?.join(' & ')}</label><br/>`)}
     <label>Subtitles</label><br/>
     <textarea onchange=${e => setCaptionText(e.target.value)} style="width: 100%; height: 200px;" >
       ${captionText}
