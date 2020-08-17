@@ -10,6 +10,31 @@ export async function getVideos(song) {
   return results;
 }
 
+export async function getAllPerformers() {
+  const results = []
+  const db = firebase.firestore();
+  let snapshot = await db.collection('performers').get();
+  snapshot.forEach(doc => {
+    results.push({...doc.data(), id:doc.id});
+  });
+  return results;
+}
+
+export async function createPerformer(performer) {
+  const db = firebase.firestore();
+  return db.collection('performers').add(performer);
+}
+
+export async function deletePerformer(performer) {
+  const db = firebase.firestore();
+  return db.collection('performers').doc(performer.id).delete()
+}
+
+export async function deleteSong(song) {
+  const db = firebase.firestore();
+  return db.collection('songs').doc(song.id).delete();
+}
+
 export async function getVideoUrls(song) {
   const ret = {};
   const storageRef = firebase.storage().ref();
@@ -20,6 +45,11 @@ export async function getVideoUrls(song) {
     console.log(e);
   }
   return ret;
+}
+
+export function savePerformer(performer) {
+  const db = firebase.firestore();
+  return db.collection('performers').doc(performer.id).set(performer);
 }
 
 export function saveSong(song, captionText) {

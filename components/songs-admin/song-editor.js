@@ -1,21 +1,34 @@
-import {saveSong, getVideos, getVideoUrls} from '../../services/storage.js';
+import {saveSong, getVideos, getVideoUrls, getAllPerformers} from '../../services/storage.js';
 import {
   html,
   useEffect,
   useState,
+  useRef
 } from "https://unpkg.com/htm/preact/standalone.module.js";
 
-export default function SongEditor(props) {
-  const [videos, setVideos] = useState([]);
-  const [backingUrl, setBackingUrl] = useState(null);
-  const [captionsUrl, setCaptionsUrl] = useState(null);
-  const [captionText, setCaptionText] = useState(`WEBVTT
+const exampleCaptions = `WEBVTT
 
 00:01.000 --> 00:04.000
 These are example song lyrics
 00:05.000 --> 00:09.000
 It will be updated when you save.
-`);
+`
+
+export default function SongEditor(props) {
+  const [videos, setVideos] = useState([]);
+  const [assignedPerformers, setAssignedPerformers] = useState([]);
+  const [backingUrl, setBackingUrl] = useState(null);
+  const [captionsUrl, setCaptionsUrl] = useState(null);
+  const [captionText, setCaptionText] = useState(exampleCaptions);
+  const selectRef = useRef(null);
+
+  useEffect(() => {
+    if (props.song.performers) {
+      setAssignedPerformers(props.song.performers);
+    } else {
+      setAssignedPerformers([]);
+    }
+  }, props.song.performers);
 
   async function getFiles() {
     const urls = await getVideoUrls(props.song);
@@ -26,25 +39,38 @@ It will be updated when you save.
       setCaptionText(await response.text());
     }
   }
+
+  useEffect(() => {
+    const newVal = assignedPerformers.map(p => p.id);
+    if (selectRef.current) {
+      selectRef.current.setValue(newVal, true);
+    }
+    const emails = assignedPerformers.reduce((acc, p) => acc.concat([p.email, p.otherEmail]), []);
+    props.setSong({
+      ...props.song,
+      performers:assignedPerformers,
+      allowedEmails: emails.filter(e => e !== '')
+    });
+  }, [assignedPerformers]);
   
   useEffect(() => {
     if (props.song.video) getFiles()
   }, [props.song.video]);
 
-  useEffect(() => getVideos(props.song).then((videos) => setVideos(videos)), [props.song.id]);
+  useEffect(() => {
+    const select = $('#performerSelect').selectize({
+      allowEmptyOption: true,
+      maxItems: null,
+      items: [],
+      onChange: assignedIds => {
+        const foundPerformers = props.performers.filter(p => assignedIds.includes(p.id));
+        setAssignedPerformers(foundPerformers);
+      }
+    });
+    selectRef.current = select[0].selectize;
+  }, [props.performers]);
 
-  function onEmailChange(newValue, i) {
-    let list = [...props.song.allowedEmails];
-    list[i] = newValue;
-    props.setSong({...props.song, allowedEmails:list});
-  }
-  function onRemoveEmail(i) {
-    let list = props.song.allowedEmails.filter((e, j) => i!=j);
-    props.setSong({...props.song, allowedEmails:list});
-  }
-  function onAddEmail() {
-    props.setSong({...props.song, allowedEmails:[...props.song.allowedEmails, '']});
-  }
+  useEffect(() => getVideos(props.song).then((videos) => setVideos(videos)), [props.song.id]);
   
   function saveSongInfo() {
     saveSong(props.song, captionText).then(()=> {
@@ -60,13 +86,17 @@ It will be updated when you save.
     <textarea style="height: 150px; width: 100%" onchange=${e => props.setSong({...props.song, description:e.target.value})}>
       ${props.song.description}
     </textarea><br/>
-    <label> Assigned Email Addresses </label>
-    <ul>
-      ${props.song.allowedEmails.map((email, i) => 
-        html`<li><input value=${email} onchange=${e => onEmailChange(e.target.value, i)}/>
-        <button onclick=${e => onRemoveEmail(i)}>Remove</button></li>`)}
-      <li><button onclick=${e => onAddEmail()}>Add Another</button></li>
-    </ul>
+    <div class="control-group">
+					<label for="perfomerSelect">Assigned Performers:</label>
+          <select
+            id="performerSelect"
+            class="demo-default"
+            data-placeholder="Select performers..."
+            onchange=${e=> console.log(e.target.value)}
+          >
+						${props.performers.map(performer => html`<option value="${performer.id}">${performer.name}</option>`)}
+					</select>
+				</div>
     <label>Backing Video</label><br/>
     ${[...videos, {id:null, submitter:'None'}].map(v => html`
       <input
@@ -88,6 +118,6 @@ It will be updated when you save.
       <video width="350" src="${backingUrl}" controls crossorigin="anonymous">
         ${captionsUrl?html`<track kind="subtitles" src="${captionsUrl}" default/>`:null}
       </video>`:null}
-      </div>
+    </div>
     `
 }

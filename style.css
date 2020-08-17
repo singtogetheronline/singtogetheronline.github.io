@@ -56,3 +56,12 @@ video {
 label {
     font-weight: bold;
 }
+
+.trash-icon {
+    color: #666;
+    margin-left: 10px;
+}
+
+.trash-icon:hover {
+    color: #f33;
+}
