@@ -1,11 +1,12 @@
 import firebase from "../firebase.js";
+import ManageOrg from './songs-admin/manage-org.js';
 import {
   html,
   useEffect,
   useState,
   render
 } from "https://unpkg.com/htm/preact/standalone.module.js";
-import SongListEditor from './songs-admin/song-list-editor.js';
+
 
 function Admin() {
   const [user, setUser] = useState(null);
@@ -21,17 +22,23 @@ function Admin() {
   }, []);
 
   let signInOut;
+  let body;
   if (user === null) {
     signInOut = html`
       <button onclick=${e => {window.location.href = "./signin.html";}}>
         Sign In
       </button>
     `;
+    body = html`Sign in to see what songs are assigned to you`;
   } else {
     signInOut = html`
       ${user.displayName}
       <button class="signOutBtn" onclick=${e => firebase.auth().signOut()}>Sign Out</button>
     `;
+    body = html`
+        <${ManageOrg}
+          org=${org} />
+      `;
   }
   return html`
   <div class="topbar">
@@ -42,11 +49,10 @@ function Admin() {
     </div>
   </div>
   <div class="mainBody">
-    <div class="mainCenter">
-      ${user ? html`<${SongListEditor} user=${user} org=${org} />` : 'Sign in to see what songs are assigned to you'}
-    </div>
+    ${body}
   </div>`;
 }
+
 render(
   html`<${Admin} />`,
   document.querySelector("body")

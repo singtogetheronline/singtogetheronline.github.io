@@ -5,6 +5,7 @@ import {
   useState,
   useRef
 } from "https://unpkg.com/htm/preact/standalone.module.js";
+import AdminState from './admin-state.js';
 
 const exampleCaptions = `WEBVTT
 
@@ -32,6 +33,7 @@ export default function SongEditor(props) {
 
   async function getFiles() {
     const urls = await getVideoUrls(props.song);
+    console.log(urls);
     setBackingUrl(urls.video);
     setCaptionsUrl(urls.caption);
     if (urls.caption) {
@@ -54,6 +56,7 @@ export default function SongEditor(props) {
   }, [assignedPerformers]);
   
   useEffect(() => {
+    console.log(props.song.video);
     if (props.song.video) getFiles()
   }, [props.song.video]);
 
@@ -80,6 +83,9 @@ export default function SongEditor(props) {
 
   return html`
   <div style="width: 100%;">
+  <div>
+    <button onclick=${e => props.setAdminState(AdminState.EXPORT)}> Export Song </button>
+  </div>
   <label>Song Name</label><br/>
     <input value=${props.song.name} onchange=${e => props.setSong({...props.song, name:e.target.value})}/><br/>
     <label>Song Instructions</label><br/>

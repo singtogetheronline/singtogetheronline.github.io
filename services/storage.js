@@ -56,10 +56,20 @@ export async function deleteSong(song) {
   return db.collection('songs').doc(song.id).delete();
 }
 
+export async function getVideoUrl(song, video) {
+  const storageRef = firebase.storage().ref();
+  const url = await storageRef
+    .child(`${song.id}/${video.id}.${video.filetype}`)
+    .getDownloadURL();
+  return {...video, url};
+}
+
 export async function getVideoUrls(song) {
   const ret = {};
   const storageRef = firebase.storage().ref();
-  ret.video = await storageRef.child(`${song.id}/${song.video.id}.${song.video.filetype}`).getDownloadURL();
+  ret.video = await storageRef
+    .child(`${song.id}/${song.video.id}.${song.video.filetype}`)
+    .getDownloadURL();
   try {
     ret.caption = await storageRef.child(`captions/${song.id}.vtt`).getDownloadURL();
   } catch (e) {

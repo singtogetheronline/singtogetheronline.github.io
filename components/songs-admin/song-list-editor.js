@@ -5,19 +5,14 @@ import {
   useEffect,
   useState,
 } from "https://unpkg.com/htm/preact/standalone.module.js";
-import SongEditor from "./song-editor.js";
-import Performers from './performers.js';
+import AdminState from './admin-state.js';
 
 export default function SongListEditor(props) {
   const [songs, setSongs] = useState([]);
-  const [song, setSong] = useState(null);
-  const [performers, setPerformers] = useState([]);
   
   useEffect(() => {
-    if (song == null) {
       getAllSongs(props.org).then(results => setSongs(results));
-    }
-  }, [song, props.org]);
+  }, [props.song, props.org]);
 
   function removeSong(song) {
     deleteSong(song).then(() => {
@@ -32,21 +27,20 @@ export default function SongListEditor(props) {
       allowedEmails: [],
       org: props.org
     };
-    createSong(s).then(d => setSong({...s, id:d.id}));
-  }
-  if (song) {
-    return html`<${SongEditor} user=${props.user} song=${song} setSong=${setSong} performers=${performers} />`;
+    createSong(s).then(d => props.setSong({...s, id:d.id}));
   }
   return html`
-    <h3>Manage Songs</h3>
+    <h3>Songs</h3>
     <ul>
       ${songs.map(song => html`
         <li>
-          <a href="#" onclick=${e => setSong(song)}>${song.name}</a>
+          <a href="#" onclick=${e => {
+            props.setSong(song);
+            props.setAdminState(AdminState.EDIT_SONG);
+          }}>${song.name}</a>
           <a href="#" onclick=${e => removeSong(song)}> <i class="fas fa-trash-alt trash-icon"></i></a>
         </li>`)}
       <li><a href="#" onclick=${e => newSong()}>New Song</a></li>
     </ul>
-    <${Performers} performers=${performers} setPerformers=${setPerformers} org=${props.org} />
     `;
 }

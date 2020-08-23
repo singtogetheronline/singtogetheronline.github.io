@@ -37,7 +37,7 @@ export default function Performers(props) {
   }
 
   return html`
-    <h3>Manage Performers</h3>
+    <h3>Performers</h3>
     <ul>
       ${props.performers.map(performer => html`
         <li><a href="#" onclick=${e => {
