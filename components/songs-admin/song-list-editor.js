@@ -27,7 +27,10 @@ export default function SongListEditor(props) {
       allowedEmails: [],
       org: props.org
     };
-    createSong(s).then(d => props.setSong({...s, id:d.id}));
+    createSong(s).then(d => {
+      props.setSong({...s, id:d.id});
+      props.setAdminState(AdminState.EDIT_SONG);
+    });
   }
   return html`
     <h3>Songs</h3>

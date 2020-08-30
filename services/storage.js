@@ -86,11 +86,17 @@ export function savePerformer(performer) {
 export function saveSong(song, captionText) {
   const storageRef = firebase.storage().ref();
   const captionsRef = storageRef.child(`captions/${song.id}.vtt`);
-  captionsRef.putString(captionText).then(() => {
-    console.log('captions successfully uploaded');
-  });
+  captionsRef.putString(captionText);
   const db = firebase.firestore();
   return db.collection('songs').doc(song.id).set(song)
+}
+
+export function updateVideoInfo(song, video) {
+  const performerId = video.performers.map(p => p.id).join('_');
+  const db = firebase.firestore();
+  db.collection("videos")
+    .doc(`${song.id}/performers/${performerId}`)
+    .set(video);
 }
 
 export function uploadVideo(song, user, performers, blobOrFile, filetype) {

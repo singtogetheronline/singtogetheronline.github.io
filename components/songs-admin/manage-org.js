@@ -36,9 +36,6 @@ export default function ManageOrg(props) {
       org=${props.org}
       performers=${performers}
       song=${song} />`;
-  if (adminState == AdminState.EXPORT) {
-    console.log('?');
-  }
   return html`
     <${BreadCrumbNav} currentState=${adminState} setState=${setAdminState} navItems=${adminBreadCrumbs}/>
     <div class="mainCenter">
