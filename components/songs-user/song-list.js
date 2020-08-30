@@ -18,7 +18,7 @@ export default function SongList(props) {
   }
   
   return html`
-    <h2>Assigned Song List</h2>
+    <h2>Primary Program Assignments</h2>
     <ul>
       ${songs.map(song => html`<li><a href="#" onclick=${e => setSong(song)}>${song.name}</a></li>`)}
     </ul>`;
