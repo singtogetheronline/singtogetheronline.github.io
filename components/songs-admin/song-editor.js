@@ -29,11 +29,10 @@ export default function SongEditor(props) {
     } else {
       setAssignedPerformers([]);
     }
-  }, props.song.performers);
+  }, props.song?.performers);
 
   async function getFiles() {
     const urls = await getVideoUrls(props.song);
-    console.log(urls);
     setBackingUrl(urls.video);
     setCaptionsUrl(urls.caption);
     if (urls.caption) {
@@ -56,7 +55,6 @@ export default function SongEditor(props) {
   }, [assignedPerformers]);
   
   useEffect(() => {
-    console.log(props.song.video);
     if (props.song.video) getFiles()
   }, [props.song.video]);
 
@@ -98,7 +96,6 @@ export default function SongEditor(props) {
             id="performerSelect"
             class="demo-default"
             data-placeholder="Select performers..."
-            onchange=${e=> console.log(e.target.value)}
           >
 						${props.performers.map(performer => html`<option value="${performer.id}">${performer.name}</option>`)}
 					</select>
