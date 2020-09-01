@@ -1,3 +1,83 @@
+.playlist { margin: 2em 0; }
+
+.playlist .playlist-time-scale { height: 30px; }
+
+.playlist .playlist-tracks { background: #E0EFF1; }
+
+.playlist .channel { background: grey; }
+
+.playlist .channel-progress { background: orange; }
+
+.playlist .cursor { background: black; }
+
+.playlist .state-shift { cursor: ew-resize; }
+
+.playlist .selection.point { background: red; }
+
+.playlist .selection.segment { background: rgba(0, 0, 0, 0.1); }
+
+.playlist .channel-wrapper.silent .channel { opacity: 0.3; }
+
+.playlist .controls { background: white; text-align: center; }
+
+.playlist .controls header {
+    overflow: hidden;
+    color: black;
+    background-color: #ccc;
+    margin-bottom: 1em;
+    height: 20px;
+    font-weight: bold;
+}
+
+.playlist .controls label { margin: 1em auto; width: 100%; display: inline-block; font: normal normal normal 14px/1 FontAwesome; font-size: inherit; text-rendering: auto; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; transform: translate(0, 0); }
+
+.playlist .controls label:before {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f027";
+    color: #333;
+    font-size: 18px;
+    padding-right: 5px;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.playlist .controls label:after {
+    font-family: "Font Awesome 5 Free";
+    font-weight: 900;
+    content: "\f028";
+    color: #333;
+    font-size: 18px;
+    padding-left: 5px;
+}
+
+.playlist .controls input[type=range] { -webkit-appearance: none; -moz-appearance: none; appearance: none; display: inline-block; width: 75%; }
+
+.playlist .controls input[type=range]::-webkit-slider-runnable-track { height: 8px; background: #ddd; border: none; border-radius: 3px; padding: 1px; }
+
+.playlist .controls input[type=range]::-moz-range-track { height: 8px; background: #ddd; border: none; border-radius: 3px; padding: 1px; }
+
+.playlist .controls input[type=range]::-webkit-slider-thumb { -webkit-appearance: none; -moz-appearance: none; appearance: none; border: none; height: 16px; width: 16px; border-radius: 50%; background: goldenrod; margin-top: -5px; cursor: ew-resize; }
+
+.playlist .controls input[type=range]::-moz-range-thumb { border: none; height: 16px; width: 16px; border-radius: 50%; background: goldenrod; margin-top: -5px; cursor: ew-resize; }
+
+.playlist .controls input[type=range]:focus { outline: none; }
+
+.playlist .controls input[type=range]:focus::-webkit-slider-runnable-track { background: #ccc; }
+
+.playlist .controls input[type=range]:focus::-moz-range-track { background: #ccc; }
+
+footer { margin-top: 2em; }
+
+.btn.active {
+    background-color: #ccc;
+}
+
+.btn {
+    background-color: rgb(233, 236, 239);
+    border: 2px solid white;
+    border-radius: 0.75rem;
+}
+
 html, body {
     max-width: 100%;
     overflow-x: hidden;
