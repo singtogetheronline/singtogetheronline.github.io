@@ -1,4 +1,4 @@
-import {saveSong, getVideos, getVideoUrls, getAllPerformers} from '../../services/storage.js';
+import { saveSong, getVideos, getVideoUrls } from '../../services/storage.js';
 import {
   html,
   useEffect,
@@ -49,11 +49,11 @@ export default function SongEditor(props) {
     const emails = assignedPerformers.reduce((acc, p) => acc.concat([p.email, p.otherEmail]), []);
     props.setSong({
       ...props.song,
-      performers:assignedPerformers,
+      performers: assignedPerformers,
       allowedEmails: emails.filter(e => e !== '')
     });
   }, [assignedPerformers]);
-  
+
   useEffect(() => {
     if (props.song.video) getFiles()
   }, [props.song.video]);
@@ -72,10 +72,10 @@ export default function SongEditor(props) {
   }, [props.performers]);
 
   useEffect(() => getVideos(props.song).then((videos) => setVideos(videos)), [props.song.id]);
-  
+
   function saveSongInfo() {
-    saveSong(props.song, captionText).then(()=> {
-      props.setSong(null);
+    saveSong(props.song, captionText).then(() => {
+      props.setAdminState(AdminState.MANAGE_ORG);
     });
   }
 
@@ -85,9 +85,9 @@ export default function SongEditor(props) {
     <button onclick=${e => props.setAdminState(AdminState.EXPORT)}> Export Song </button>
   </div>
   <label>Song Name</label><br/>
-    <input value=${props.song.name} onchange=${e => props.setSong({...props.song, name:e.target.value})}/><br/>
+    <input value=${props.song.name} onchange=${e => props.setSong({ ...props.song, name: e.target.value })}/><br/>
     <label>Song Instructions</label><br/>
-    <textarea style="height: 150px; width: 100%" onchange=${e => props.setSong({...props.song, description:e.target.value})}>
+    <textarea style="height: 150px; width: 100%" onchange=${e => props.setSong({ ...props.song, description: e.target.value })}>
       ${props.song.description}
     </textarea><br/>
     <div class="control-group">
@@ -101,26 +101,26 @@ export default function SongEditor(props) {
 					</select>
 				</div>
     <label>Backing Video</label><br/>
-    ${[...videos, {id:null, performers:[{name:'None'}]}].map(v => html`
+    ${[...videos, { id: null, performers: [{ name: 'None' }] }].map(v => html`
       <input
         type="radio"
         name="videoSelect"
-        onchange=${e=> {
-          if (e.target.checked) props.setSong({...props.song, video:v})
-        }}
-        ...${props.song.video?.id == v.id? { checked: true }:{}}
+        onchange=${e => {
+      if (e.target.checked) props.setSong({ ...props.song, video: v })
+    }}
+        ...${props.song.video?.id == v.id ? { checked: true } : {}}
       />
       <label>${v.performers?.map(p => p.name)?.join(' & ')}</label><br/>`)}
     <label>Subtitles</label><br/>
     <textarea onchange=${e => setCaptionText(e.target.value)} style="width: 100%; height: 200px;" >
       ${captionText}
     </textarea><br/>
-    <button onclick=${e=> saveSongInfo()}>Save</button>
-    <button onclick=${e=> props.setSong(null)}>Cancel</button> <br/>
-    ${backingUrl?html`
+    <button onclick=${e => saveSongInfo()}>Save</button>
+    <button onclick=${e => props.setSong(null)}>Cancel</button> <br/>
+    ${backingUrl ? html`
       <video width="350" src="${backingUrl}" controls crossorigin="anonymous">
-        ${captionsUrl?html`<track kind="subtitles" src="${captionsUrl}" default/>`:null}
-      </video>`:null}
+        ${captionsUrl ? html`<track kind="subtitles" src="${captionsUrl}" default/>` : null}
+      </video>`: null}
     </div>
     `
 }
